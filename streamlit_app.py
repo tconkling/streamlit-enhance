@@ -52,8 +52,8 @@ def open_image(src: Any) -> PIL.Image.Image:
     raise RuntimeError('Unrecognized image: %s' % src)
 
 
-@st.cache(persist=True, suppress_st_warning=True, hash_funcs={Net: id})
-def train(opt: Opt) -> Net:
+@st.cache(persist=True, suppress_st_warning=True)
+def train(opt: Opt) -> bytes:
     if opt.cuda and not torch.cuda.is_available():
         raise Exception("No GPU found, please run without --cuda")
 
@@ -112,7 +112,12 @@ def train(opt: Opt) -> Net:
         train(epoch)
         # test()
 
-    return model
+    bytes = BytesIO()
+    torch.save(model, bytes)
+    bytes.seek(0)
+    bytestring = bytes.getbuffer().tobytes()
+    bytes.close()
+    return bytestring
 
 
 @st.cache
@@ -167,7 +172,8 @@ opt = Opt(
     seed=123,
 )
 
-model = train(opt)
+model_bytes = train(opt)
+model = torch.load(BytesIO(model_bytes))
 
 # Lena: https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Lenna_%28test_image%29.png/220px-Lenna_%28test_image%29.png
 # Car: dataset/BSDS300/images/test/21077.jpg
