@@ -1,0 +1,5 @@
+[global]
+sharingMode = "off"
+
+[server]
+folderWatchBlacklist = "venv"

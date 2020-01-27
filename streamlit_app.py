@@ -52,7 +52,7 @@ def open_image(src: Any) -> PIL.Image.Image:
     raise RuntimeError('Unrecognized image: %s' % src)
 
 
-@st.cache(persist=False, suppress_st_warning=True)
+@st.cache(persist=True, suppress_st_warning=True, hash_funcs={Net: id})
 def train(opt: Opt) -> Net:
     if opt.cuda and not torch.cuda.is_available():
         raise Exception("No GPU found, please run without --cuda")
@@ -154,27 +154,20 @@ Pytorch [Super Resolution Example](https://github.com/pytorch/examples/tree/mast
 in Streamlit
 """
 
-"""
-## TRAINING PARAMS
-"""
+st.sidebar.markdown("## Training Params")
 
 opt = Opt(
-    cuda=st.checkbox('Use CUDA', value=False),
-    upscale_factor=st.slider('Upscale Factor', value=4, min_value=1, max_value=5),
-    batchSize=st.slider('Training Batch Size', value=4, min_value=1, max_value=256),
-    testBatchSize=st.slider('Testing Batch Size', value=100, min_value=1, max_value=256),
-    nEpochs=st.slider('Training Epochs', value=35, min_value=1, max_value=100),
+    cuda=st.sidebar.checkbox('Use CUDA', value=False),
+    upscale_factor=st.sidebar.slider('Upscale Factor', value=4, min_value=1, max_value=5),
+    batchSize=st.sidebar.slider('Training Batch Size', value=4, min_value=1, max_value=256),
+    testBatchSize=st.sidebar.slider('Testing Batch Size', value=100, min_value=1, max_value=256),
+    nEpochs=st.sidebar.slider('Training Epochs', value=35, min_value=1, max_value=100),
     lr=0.001,
-    threads=st.slider('Dataloader Threads', value=4, min_value=1, max_value=16),
+    threads=st.sidebar.slider('Dataloader Threads', value=4, min_value=1, max_value=16),
     seed=123,
 )
 
 model = train(opt)
-
-
-"""
-## ENHANCE
-"""
 
 # Lena: https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Lenna_%28test_image%29.png/220px-Lenna_%28test_image%29.png
 # Car: dataset/BSDS300/images/test/21077.jpg
