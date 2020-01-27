@@ -1,7 +1,7 @@
 # PyTorch examples in Streamlit
 
 * [Examples source](https://github.com/pytorch/examples)
-* To run: `streamlit run streamlit_enhance.py`
+* To run: `streamlit run streamlit-enhance.py`
 
 
 ## Wishlist
