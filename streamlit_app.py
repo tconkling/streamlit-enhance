@@ -29,7 +29,6 @@ Opt = namedtuple('Opt', [
 ])
 
 
-@st.cache
 def open_image(src: Any) -> PIL.Image.Image:
     if isinstance(src, PIL.Image.Image):
         return src
@@ -43,11 +42,10 @@ def open_image(src: Any) -> PIL.Image.Image:
         except UnicodeDecodeError:
             pass
 
-        # If not, see if it's a file.
-        try:
-            return PIL.Image.open(src)
-        except:
-            pass
+    try:
+        return PIL.Image.open(src)
+    except:
+        pass
 
     raise RuntimeError('Unrecognized image: %s' % src)
 
@@ -120,13 +118,11 @@ def train(opt: Opt) -> bytes:
     return bytestring
 
 
-@st.cache
 def resize_naive(input_image: Any, scale_factor: int) -> PIL.Image.Image:
     img = open_image(input_image)
     return img.resize((img.size[0] * scale_factor, img.size[1] * scale_factor), PIL.Image.ANTIALIAS)
 
 
-@st.cache
 def super_resolve(model: Net, input_image: Any, cuda: bool) -> PIL.Image.Image:
     img = open_image(input_image).convert('YCbCr')
     y, cb, cr = img.split()
@@ -155,7 +151,7 @@ def super_resolve(model: Net, input_image: Any, cuda: bool) -> PIL.Image.Image:
 """
 # Streamlit: ENHANCE
 
-Pytorch [Super Resolution Example](https://github.com/pytorch/examples/tree/master/super_resolution) 
+PyTorch [Super Resolution Example](https://github.com/pytorch/examples/tree/master/super_resolution) 
 in Streamlit
 """
 
@@ -179,15 +175,16 @@ model = torch.load(BytesIO(model_bytes))
 # Car: dataset/BSDS300/images/test/21077.jpg
 # Corn: dataset/BSDS300/images/test/58060.jpg
 
-# st.file_uploader("Input Image", ["png", "jpg"])
+st.code(f"Using: upscale={opt.upscale_factor}x, nEpochs={opt.nEpochs}")
 
-input_image = st.text_input('Input Image', 'dataset/BSDS300/images/test/16077.jpg')
+input_image = st.file_uploader("Upload an image", ["png", "jpg"], encoding=None)
+if input_image is None:
+    input_image = 'leon.png'
 
-st.write('Input')
 st.image(open_image(input_image))
 
-st.write('Output')
+st.write('Super Resolution:')
 st.image(super_resolve(model, input_image, False))
 
-st.write('Naive')
+st.write('Naive Upscale:')
 st.image(resize_naive(input_image, opt.upscale_factor))
