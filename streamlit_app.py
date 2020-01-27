@@ -52,7 +52,7 @@ def open_image(src: Any) -> PIL.Image.Image:
     raise RuntimeError('Unrecognized image: %s' % src)
 
 
-@st.cache(persist=True, suppress_st_warning=True)
+@st.cache(persist=False, suppress_st_warning=True)
 def train(opt: Opt) -> Net:
     if opt.cuda and not torch.cuda.is_available():
         raise Exception("No GPU found, please run without --cuda")
@@ -180,7 +180,7 @@ model = train(opt)
 # Car: dataset/BSDS300/images/test/21077.jpg
 # Corn: dataset/BSDS300/images/test/58060.jpg
 
-input_image = st.input('Input Image', 'super_resolution/dataset/BSDS300/images/test/16077.jpg')
+input_image = st.text_input('Input Image', 'dataset/BSDS300/images/test/16077.jpg')
 
 st.write('Input')
 st.image(open_image(input_image))
