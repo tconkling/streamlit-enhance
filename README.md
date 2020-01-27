@@ -1,4 +1,4 @@
-# PyTorch examples in Streamlit
+# PyTorch "Super Resolution" example in Streamlit
 
 * [Examples source](https://github.com/pytorch/examples)
 * To run: `streamlit run streamlit-enhance.py`
