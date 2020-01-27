@@ -7,3 +7,4 @@
 
 * Re-running while PyTorch training is running causes the app to hang forever.
     * Need to shut it down and restart
+    * /?restart=1 in s4t
