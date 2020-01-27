@@ -167,13 +167,7 @@ opt = Opt(
     seed=123,
 )
 
-# model = train(opt)
-
-@st.cache(persist=True, suppress_st_warning=True)
-def cache_test():
-    return "qwert"
-
-st.write(cache_test())
+model = train(opt)
 
 # Lena: https://upload.wikimedia.org/wikipedia/en/thumb/7/7d/Lenna_%28test_image%29.png/220px-Lenna_%28test_image%29.png
 # Car: dataset/BSDS300/images/test/21077.jpg
