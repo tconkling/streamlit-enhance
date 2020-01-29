@@ -66,8 +66,7 @@ def load_model(training_opt: TrainingOptions, device_opt: DeviceOptions) -> Net:
     model = train(training_opt, device_opt)
     bytes = BytesIO()
     torch.save(model, bytes)
-    bytes.seek(0)
-    model_cache.write(training_opt, bytes.getbuffer().tobytes())
+    model_cache.write(training_opt, bytes.getvalue())
     bytes.close()
     return model
 
